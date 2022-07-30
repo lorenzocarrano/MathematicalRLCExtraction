@@ -1,11 +1,96 @@
 from tkinter import *
+from math import pi
 frame_background_color = "light gray"
 options_background_color = "light gray"
 root_background_color = "light gray"
+entry_width = 16
+round_digits = 5
 
-def parametersExtraction():
+def parametersExtraction(inputList, outputList):
     
-    return 0
+    opFreq = inputList[0]
+    chImped = inputList[1]
+    S11 = inputList[2]
+    S12 = inputList[3]
+    S21 = inputList[4]
+    S22 = inputList[5]
+    
+    A = outputList[0]
+    B = outputList[1]
+    C = outputList[2]
+    D = outputList[3]
+    C1 = outputList[4]
+    C2 = outputList[5]
+    C3 = outputList[6]
+    Y1 = outputList[7]
+    Y2 = outputList[8]
+    
+    paramA = ((1+complex(S11.get()))*(1-complex(S22.get()))+complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()));
+    paramB = ((1+complex(S11.get()))*(1+complex(S22.get()))-complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()));
+    paramC = ((1-complex(S11.get()))*(1-complex(S22.get()))-complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()));
+    paramD = ((1-complex(S11.get()))*(1+complex(S22.get()))+complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()));
+    #rounding results
+    paramArealRounded = round(paramA.real, round_digits)
+    paramAimagRounded = round(paramA.imag, round_digits)
+    paramA = complex(paramArealRounded, paramAimagRounded)
+    paramBrealRounded = round(paramB.real, round_digits)
+    paramBimagRounded = round(paramB.imag, round_digits)
+    paramB = complex(paramBrealRounded, paramBimagRounded)
+    paramCrealRounded = round(paramC.real, round_digits)
+    paramCimagRounded = round(paramC.imag, round_digits)
+    paramC = complex(paramCrealRounded, paramCimagRounded)
+    paramDrealRounded = round(paramD.real, round_digits)
+    paramDimagRounded = round(paramD.imag, round_digits)
+    paramD = complex(paramDrealRounded, paramDimagRounded)
+    
+    #ABCD parameters update
+    A.configure(state="normal")
+    A.delete(0, END) #deletes the current value
+    A.insert(0, paramA) #inserts new value assigned by 2nd parameter
+    A.configure(state="disabled")
+    B.configure(state="normal")
+    B.delete(0, END) #deletes the current value
+    B.insert(0, paramB) #inserts new value assigned by 2nd parameter
+    B.configure(state="disabled")
+    C.configure(state="normal")
+    C.delete(0, END) #deletes the current value
+    C.insert(0, paramC) #inserts new value assigned by 2nd parameter
+    C.configure(state="disabled")
+    D.configure(state="normal")
+    D.delete(0, END) #deletes the current value
+    D.insert(0, paramD) #inserts new value assigned by 2nd parameter
+    D.configure(state="disabled")
+    
+    #parameters evaluation
+    Z = complex(chImped.get())*paramB;
+    Inductance = Z.imag/(2*pi*int(opFreq.get()))
+    
+    valueY1 = (paramD-1)/Z;
+    valueY1Rounded = complex(round(valueY1.real, round_digits), round(valueY1.imag, round_digits))
+    Y1.configure(state="normal")
+    Y1.delete(0, END)
+    Y1.insert(0, valueY1Rounded)
+    Y1.configure(state="disabled")
+    valueY2 = (paramA-1)/Z;
+    valueY2Rounded = complex(round(valueY2.real, round_digits), round(valueY2.imag, round_digits))
+    Y2.configure(state="normal")
+    Y2.delete(0, END)
+    Y2.insert(0, valueY2Rounded)
+    Y2.configure(state="disabled")
+    valueC1 = valueY1.imag()/(2*pi*int(opFreq.get()))
+    valueC2 = valueY2.imag()/(2*pi*int(opFreq.get()))
+    
+    
+def reset(inputList, outputList):
+    
+    for i in range(0, len(inputList)):
+        inputList[i].delete(0, END)
+    
+    for i in range(0, len(outputList)):
+        outputList[i].configure(state="normal")
+        outputList[i].delete(0, END)
+        outputList[i].configure(state="disabled")
+
 def main():
     #main window settings
     root = Tk()
@@ -18,14 +103,14 @@ def main():
     InputFrame.grid(row=0,column=0, sticky="n")
     #operating frequency
     InputParameterFrame = LabelFrame(InputFrame, text="Electrical Parameters", font=("Helvetica", 10), background=options_background_color)
-    InputParameterFrame.grid(row=0, column=0)
+    InputParameterFrame.grid(row=0, column=0, sticky="w")
     opFreqLabel = Label(InputParameterFrame, text="Op Frequency", font=("Helvetica", 10), background=options_background_color, justify='left')
     opFreqLabel.grid(row=0, column=0, sticky='w')
     chImpedanceLabel = Label(InputParameterFrame, text="Ch. Impedance", font=("Helvetica", 10), background=options_background_color, justify='left')
     chImpedanceLabel.grid(row=1, column=0, sticky='w')
-    opFreqEntr = Entry(InputParameterFrame, font=("Helvetica", 10), width=7, justify="right")
+    opFreqEntr = Entry(InputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right")
     opFreqEntr.grid(row=0, column=1, sticky='w')
-    chImpedanceEntr = Entry(InputParameterFrame, font=("Helvetica", 10), width=7, justify="right")
+    chImpedanceEntr = Entry(InputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right")
     chImpedanceEntr.grid(row=1, column=1, sticky='w')
     #scattering matrix
     #labels
@@ -40,13 +125,13 @@ def main():
     scatteringMatrixS22Label = Label(scatteringMatrixFrame, text="S22", font=("Helvetica", 10), background=options_background_color, justify='left')
     scatteringMatrixS22Label.grid(row=1, column=2)
     #parameter entries
-    scatteringMatrixS11Entry = Entry(scatteringMatrixFrame, font=("Helvetica", 10), width=7, justify="right")
+    scatteringMatrixS11Entry = Entry(scatteringMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right")
     scatteringMatrixS11Entry.grid(row=0, column=1, sticky="w")
-    scatteringMatrixS12Entry = Entry(scatteringMatrixFrame, font=("Helvetica", 10), width=7, justify="right")
+    scatteringMatrixS12Entry = Entry(scatteringMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right")
     scatteringMatrixS12Entry.grid(row=0, column=3, sticky="e")
-    scatteringMatrixS21Entry = Entry(scatteringMatrixFrame, font=("Helvetica", 10), width=7, justify="right")
+    scatteringMatrixS21Entry = Entry(scatteringMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right")
     scatteringMatrixS21Entry.grid(row=1, column=1, sticky="w")
-    scatteringMatrixS22Entry = Entry(scatteringMatrixFrame, font=("Helvetica", 10), width=7, justify="right")
+    scatteringMatrixS22Entry = Entry(scatteringMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right")
     scatteringMatrixS22Entry.grid(row=1, column=3, sticky="e")
     
     #output frame
@@ -64,15 +149,15 @@ def main():
     Y1Label.grid(row=3, column=0, sticky='w')
     Y2Label = Label(OutputParameterFrame, text="Y2", font=("Helvetica", 10), background=options_background_color, justify='left')
     Y2Label.grid(row=4, column=0, sticky='w')
-    C1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=7, justify="right", state="disabled")
+    C1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
     C1Entry.grid(row=0, column=1, sticky="w")
-    C2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=7, justify="right", state="disabled")
+    C2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
     C2Entry.grid(row=1, column=1, sticky="w")
-    C3Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=7, justify="right", state="disabled")
+    C3Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
     C3Entry.grid(row=2, column=1, sticky="w")
-    Y1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=7, justify="right", state="disabled")
+    Y1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
     Y1Entry.grid(row=3, column=1, sticky="w")
-    Y2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=7, justify="right", state="disabled")
+    Y2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
     Y2Entry.grid(row=4, column=1, sticky="w")
     
     #ABCD matrix
@@ -88,17 +173,33 @@ def main():
     abcdMatrixDLabel = Label(abcdMatrixFrame, text="D", font=("Helvetica", 10), background=options_background_color, justify='left')
     abcdMatrixDLabel.grid(row=1, column=2)
     #parameter entries
-    abcdMatrixAEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=7, justify="right", state="disabled")
+    abcdMatrixAEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
     abcdMatrixAEntry.grid(row=0, column=1, sticky="w")
-    abcdMatrixBEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=7, justify="right", state="disabled")
+    abcdMatrixBEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
     abcdMatrixBEntry.grid(row=0, column=3, sticky="e")
-    abcdMatrixCEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=7, justify="right", state="disabled")
+    abcdMatrixCEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
     abcdMatrixCEntry.grid(row=1, column=1, sticky="w")
-    abcdMatrixDEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=7, justify="right", state="disabled")
+    abcdMatrixDEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
     abcdMatrixDEntry.grid(row=1, column=3, sticky="e")
     
-    calculateBtn = Button(root, text="Extraction", font=("Helvetica", 10), background="light gray", command=lambda:parametersExtraction())
+    #precharging default values in entries
+    chImpedanceEntr.insert(0, "50")
+    opFreqEntr.insert(0, "200000000")
+    scatteringMatrixS11Entry.insert(0, "(0.0246+0.1411j)")
+    scatteringMatrixS12Entry.insert(0, "(0.9751-0.1644j)")
+    scatteringMatrixS21Entry.insert(0, "(0.9751-0.1644j)")
+    scatteringMatrixS22Entry.insert(0, "(0.0246+0.1411j)")
+    
+    #packaging of input and output parameters
+    inputParameters = [opFreqEntr, chImpedanceEntr, scatteringMatrixS11Entry, scatteringMatrixS12Entry, scatteringMatrixS21Entry, scatteringMatrixS22Entry]
+    outputParameters = [abcdMatrixAEntry, abcdMatrixBEntry, abcdMatrixCEntry, abcdMatrixDEntry, C1Entry, C2Entry, C3Entry, Y1Entry, Y2Entry]
+    
+    #calculation button
+    calculateBtn = Button(root, text="Extraction", font=("Helvetica", 10), background="light gray", command=lambda:parametersExtraction(inputParameters, outputParameters))
     calculateBtn.grid(row=2, column=0)
+    #reset button
+    resetBtn = Button(root, text="Reset", font=("Helvetica", 10), background="light gray", command=lambda:reset(inputParameters, outputParameters))
+    resetBtn.grid(row=2, column=1)
     
     root.mainloop()
     
