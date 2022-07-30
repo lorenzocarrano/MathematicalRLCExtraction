@@ -4,6 +4,7 @@ frame_background_color = "light gray"
 options_background_color = "light gray"
 root_background_color = "light gray"
 entry_width = 16
+entry_width_extended = 30
 round_digits = 5
 
 def parametersExtraction(inputList, outputList):
@@ -84,19 +85,19 @@ def parametersExtraction(inputList, outputList):
     C1.configure(state="normal")
     C1.delete(0, END)
     C1.insert(0, valueC1)
-    C1.configure(state="normal")
+    C1.configure(state="disable")
     valueC2 = valueY2.imag/commonDen
     valueC2Rounded = complex(round(valueC2.real, round_digits), round(valueC2.imag, round_digits))
     C2.configure(state="normal")
     C2.delete(0, END)
     C2.insert(0, valueC2)
-    C2.configure(state="normal")
+    C2.configure(state="disable")
     valueC3 = 1/(Inductance*((2*pi)*int(SRF.get()))*((2*pi)*int(SRF.get())))
     valueC3Rounded = complex(round(valueC3.real, round_digits), round(valueC3.imag, round_digits))
     C3.configure(state="normal")
     C3.delete(0, END)
     C3.insert(0, valueC3)
-    C3.configure(state="normal")
+    C3.configure(state="disable")
     
     
 def reset(inputList, outputList):
@@ -170,15 +171,15 @@ def main():
     Y1Label.grid(row=3, column=0, sticky='w')
     Y2Label = Label(OutputParameterFrame, text="Y2", font=("Helvetica", 10), background=options_background_color, justify='left')
     Y2Label.grid(row=4, column=0, sticky='w')
-    C1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
+    C1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
     C1Entry.grid(row=0, column=1, sticky="w")
-    C2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
+    C2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
     C2Entry.grid(row=1, column=1, sticky="w")
-    C3Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
+    C3Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
     C3Entry.grid(row=2, column=1, sticky="w")
-    Y1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
+    Y1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
     Y1Entry.grid(row=3, column=1, sticky="w")
-    Y2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
+    Y2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
     Y2Entry.grid(row=4, column=1, sticky="w")
     
     #ABCD matrix
