@@ -27,10 +27,10 @@ def parametersExtraction(inputList, outputList):
     Y1 = outputList[7]
     Y2 = outputList[8]
     
-    paramA = ((1+complex(S11.get()))*(1-complex(S22.get()))+complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()));
-    paramB = ((1+complex(S11.get()))*(1+complex(S22.get()))-complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()));
-    paramC = ((1-complex(S11.get()))*(1-complex(S22.get()))-complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()));
-    paramD = ((1-complex(S11.get()))*(1+complex(S22.get()))+complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()));
+    paramA = ((1+complex(S11.get()))*(1-complex(S22.get()))+complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()))
+    paramB = ((1+complex(S11.get()))*(1+complex(S22.get()))-complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()))
+    paramC = ((1-complex(S11.get()))*(1-complex(S22.get()))-complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()))
+    paramD = ((1-complex(S11.get()))*(1+complex(S22.get()))+complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()))
     #rounding results
     paramArealRounded = round(paramA.real, round_digits)
     paramAimagRounded = round(paramA.imag, round_digits)
