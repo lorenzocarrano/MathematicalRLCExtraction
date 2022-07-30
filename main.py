@@ -1,8 +1,9 @@
 from tkinter import *
 from math import pi
-frame_background_color = "light gray"
-options_background_color = "light gray"
-root_background_color = "light gray"
+frame_background_color = "light blue"
+options_background_color = "light blue"
+root_background_color = "light blue"
+button_background_color = "white"
 entry_width = 16
 entry_width_extended = 30
 round_digits = 5
@@ -218,10 +219,10 @@ def main():
     outputParameters = [abcdMatrixAEntry, abcdMatrixBEntry, abcdMatrixCEntry, abcdMatrixDEntry, C1Entry, C2Entry, C3Entry, Y1Entry, Y2Entry]
     
     #calculation button
-    calculateBtn = Button(root, text="Extraction", font=("Helvetica", 10), background="light gray", command=lambda:parametersExtraction(inputParameters, outputParameters))
+    calculateBtn = Button(root, text="Extraction", font=("Helvetica", 10), background=button_background_color, command=lambda:parametersExtraction(inputParameters, outputParameters))
     calculateBtn.grid(row=2, column=0)
     #reset button
-    resetBtn = Button(root, text="Reset", font=("Helvetica", 10), background="light gray", command=lambda:reset(inputParameters, outputParameters))
+    resetBtn = Button(root, text="Reset", font=("Helvetica", 10), background=button_background_color, command=lambda:reset(inputParameters, outputParameters))
     resetBtn.grid(row=2, column=1)
     
     root.mainloop()
