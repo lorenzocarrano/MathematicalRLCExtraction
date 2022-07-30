@@ -83,19 +83,19 @@ def parametersExtraction(inputList, outputList):
     valueC1Rounded = complex(round(valueC1.real, round_digits), round(valueC1.imag, round_digits))
     C1.configure(state="normal")
     C1.delete(0, END)
-    C1.insert(0, valueC1Rounded)
+    C1.insert(0, valueC1)
     C1.configure(state="normal")
     valueC2 = valueY2.imag/commonDen
     valueC2Rounded = complex(round(valueC2.real, round_digits), round(valueC2.imag, round_digits))
     C2.configure(state="normal")
     C2.delete(0, END)
-    C2.insert(0, valueC2Rounded)
+    C2.insert(0, valueC2)
     C2.configure(state="normal")
     valueC3 = 1/(Inductance*((2*pi)*int(SRF.get()))*((2*pi)*int(SRF.get())))
     valueC3Rounded = complex(round(valueC3.real, round_digits), round(valueC3.imag, round_digits))
     C3.configure(state="normal")
     C3.delete(0, END)
-    C3.insert(0, valueC3Rounded)
+    C3.insert(0, valueC3)
     C3.configure(state="normal")
     
     
