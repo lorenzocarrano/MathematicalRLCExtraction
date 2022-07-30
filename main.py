@@ -27,6 +27,7 @@ def parametersExtraction(inputList, outputList):
     C3 = outputList[6]
     Y1 = outputList[7]
     Y2 = outputList[8]
+    Y = outputList[9]
     
     paramA = ((1+complex(S11.get()))*(1-complex(S22.get()))+complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()))
     paramB = ((1+complex(S11.get()))*(1+complex(S22.get()))-complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()))
@@ -67,7 +68,10 @@ def parametersExtraction(inputList, outputList):
     #parameters evaluation
     Z = complex(chImped.get())*paramB;
     Inductance = Z.imag/(2*pi*int(opFreq.get()))
-    
+    Y.configure(state="normal")
+    Y.delete(0, END)
+    Y.insert(0, Inductance)
+    Y.configure(state="disabled")    
     valueY1 = (paramD-1)/Z;
     valueY1Rounded = complex(round(valueY1.real, round_digits), round(valueY1.imag, round_digits))
     Y1.configure(state="normal")
@@ -172,6 +176,8 @@ def main():
     Y1Label.grid(row=3, column=0, sticky='w')
     Y2Label = Label(OutputParameterFrame, text="Y2", font=("Helvetica", 10), background=options_background_color, justify='left')
     Y2Label.grid(row=4, column=0, sticky='w')
+    YLabel = Label(OutputParameterFrame, text="Y", font=("Helvetica", 10), background=options_background_color, justify='left')
+    YLabel.grid(row=5, column=0, sticky='w')
     C1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
     C1Entry.grid(row=0, column=1, sticky="w")
     C2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
@@ -182,6 +188,8 @@ def main():
     Y1Entry.grid(row=3, column=1, sticky="w")
     Y2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
     Y2Entry.grid(row=4, column=1, sticky="w")
+    YEntry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
+    YEntry.grid(row=5, column=1, sticky="w")
     
     #ABCD matrix
     #labels    
@@ -216,7 +224,7 @@ def main():
     
     #packaging of input and output parameters
     inputParameters = [opFreqEntr, chImpedanceEntr, SRFEntr, scatteringMatrixS11Entry, scatteringMatrixS12Entry, scatteringMatrixS21Entry, scatteringMatrixS22Entry]
-    outputParameters = [abcdMatrixAEntry, abcdMatrixBEntry, abcdMatrixCEntry, abcdMatrixDEntry, C1Entry, C2Entry, C3Entry, Y1Entry, Y2Entry]
+    outputParameters = [abcdMatrixAEntry, abcdMatrixBEntry, abcdMatrixCEntry, abcdMatrixDEntry, C1Entry, C2Entry, C3Entry, Y1Entry, Y2Entry, YEntry]
     
     #calculation button
     calculateBtn = Button(root, text="Extraction", font=("Helvetica", 10), background=button_background_color, command=lambda:parametersExtraction(inputParameters, outputParameters))
@@ -224,6 +232,8 @@ def main():
     #reset button
     resetBtn = Button(root, text="Reset", font=("Helvetica", 10), background=button_background_color, command=lambda:reset(inputParameters, outputParameters))
     resetBtn.grid(row=2, column=1)
+    
+    root.bind('<Return>', lambda eff: parametersExtraction(inputParameters, outputParameters))
     
     root.mainloop()
     
