@@ -51,19 +51,19 @@ def parametersExtraction(inputList, outputList):
     A.configure(state="normal")
     A.delete(0, END) #deletes the current value
     A.insert(0, paramA) #inserts new value assigned by 2nd parameter
-    A.configure(state="disabled")
+    A.configure(state="readonly")
     B.configure(state="normal")
     B.delete(0, END) #deletes the current value
     B.insert(0, paramB) #inserts new value assigned by 2nd parameter
-    B.configure(state="disabled")
+    B.configure(state="readonly")
     C.configure(state="normal")
     C.delete(0, END) #deletes the current value
     C.insert(0, paramC) #inserts new value assigned by 2nd parameter
-    C.configure(state="disabled")
+    C.configure(state="readonly")
     D.configure(state="normal")
     D.delete(0, END) #deletes the current value
     D.insert(0, paramD) #inserts new value assigned by 2nd parameter
-    D.configure(state="disabled")
+    D.configure(state="readonly")
     
     #parameters evaluation
     Z = complex(chImped.get())*paramB;
@@ -71,38 +71,38 @@ def parametersExtraction(inputList, outputList):
     Y.configure(state="normal")
     Y.delete(0, END)
     Y.insert(0, Inductance)
-    Y.configure(state="disabled")    
+    Y.configure(state="readonly")
     valueY1 = (paramD-1)/Z;
     valueY1Rounded = complex(round(valueY1.real, round_digits), round(valueY1.imag, round_digits))
     Y1.configure(state="normal")
     Y1.delete(0, END)
     Y1.insert(0, valueY1Rounded)
-    Y1.configure(state="disabled")
+    Y1.configure(state="readonly")
     valueY2 = (paramA-1)/Z;
     valueY2Rounded = complex(round(valueY2.real, round_digits), round(valueY2.imag, round_digits))
     Y2.configure(state="normal")
     Y2.delete(0, END)
     Y2.insert(0, valueY2Rounded)
-    Y2.configure(state="disabled")
+    Y2.configure(state="readonly")
     commonDen = (2*pi*int(opFreq.get()))
     valueC1 = valueY1.imag/commonDen
     valueC1Rounded = complex(round(valueC1.real, round_digits), round(valueC1.imag, round_digits))
     C1.configure(state="normal")
     C1.delete(0, END)
     C1.insert(0, valueC1)
-    C1.configure(state="disable")
+    C1.configure(state="readonly")
     valueC2 = valueY2.imag/commonDen
     valueC2Rounded = complex(round(valueC2.real, round_digits), round(valueC2.imag, round_digits))
     C2.configure(state="normal")
     C2.delete(0, END)
     C2.insert(0, valueC2)
-    C2.configure(state="disable")
+    C2.configure(state="readonly")
     valueC3 = 1/(Inductance*((2*pi)*int(SRF.get()))*((2*pi)*int(SRF.get())))
     valueC3Rounded = complex(round(valueC3.real, round_digits), round(valueC3.imag, round_digits))
     C3.configure(state="normal")
     C3.delete(0, END)
     C3.insert(0, valueC3)
-    C3.configure(state="disable")
+    C3.configure(state="readonly")
     
     
 def reset(inputList, outputList):
@@ -113,7 +113,7 @@ def reset(inputList, outputList):
     for i in range(0, len(outputList)):
         outputList[i].configure(state="normal")
         outputList[i].delete(0, END)
-        outputList[i].configure(state="disabled")
+        outputList[i].configure(state="readonly")
 
 def main():
     #main window settings
@@ -178,17 +178,17 @@ def main():
     Y2Label.grid(row=4, column=0, sticky='w')
     YLabel = Label(OutputParameterFrame, text="Y", font=("Helvetica", 10), background=options_background_color, justify='left')
     YLabel.grid(row=5, column=0, sticky='w')
-    C1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
+    C1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
     C1Entry.grid(row=0, column=1, sticky="w")
-    C2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
+    C2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
     C2Entry.grid(row=1, column=1, sticky="w")
-    C3Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
+    C3Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
     C3Entry.grid(row=2, column=1, sticky="w")
-    Y1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
+    Y1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
     Y1Entry.grid(row=3, column=1, sticky="w")
-    Y2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
+    Y2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
     Y2Entry.grid(row=4, column=1, sticky="w")
-    YEntry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="disabled")
+    YEntry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
     YEntry.grid(row=5, column=1, sticky="w")
     
     #ABCD matrix
@@ -204,13 +204,13 @@ def main():
     abcdMatrixDLabel = Label(abcdMatrixFrame, text="D", font=("Helvetica", 10), background=options_background_color, justify='left')
     abcdMatrixDLabel.grid(row=1, column=2)
     #parameter entries
-    abcdMatrixAEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
+    abcdMatrixAEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="readonly")
     abcdMatrixAEntry.grid(row=0, column=1, sticky="w")
-    abcdMatrixBEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
+    abcdMatrixBEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="readonly")
     abcdMatrixBEntry.grid(row=0, column=3, sticky="e")
-    abcdMatrixCEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
+    abcdMatrixCEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="readonly")
     abcdMatrixCEntry.grid(row=1, column=1, sticky="w")
-    abcdMatrixDEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="disabled")
+    abcdMatrixDEntry = Entry(abcdMatrixFrame, font=("Helvetica", 10), width=entry_width, justify="right", state="readonly")
     abcdMatrixDEntry.grid(row=1, column=3, sticky="e")
     
     #precharging default values in entries
