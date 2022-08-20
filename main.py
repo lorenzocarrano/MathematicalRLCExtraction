@@ -1,5 +1,6 @@
 from tkinter import *
 from math import pi
+from utils import matrixProduct
 frame_background_color = "light blue"
 options_background_color = "light blue"
 root_background_color = "light blue"
@@ -185,13 +186,33 @@ def unknownNetworkDecomposition(root, inputList, outputList):
     SelectedNetworkModelEntry.configure(state="normal")
     SelectedNetworkModelEntry.insert(0, "Pi-Model")
     SelectedNetworkModelEntry.configure(state="readonly")
-    #lists declaration
-    changeModelParametersList = [SelectedNetworkModelEntry, p1Label, p2Label, p3Label, p4Label, p1Entry, p2Entry, p3Entry, p4Entry]
-    #Selection Buttons
-    piModelButton = Button(NetworkModelSelectionFrame, text="Pi-Model", font=("Helvetica", 10), background=button_background_color, command=lambda:NetworkModelSelection("P", changeModelParametersList))
-    TModelButton = Button(NetworkModelSelectionFrame, text="T-Model", font=("Helvetica", 10), background=button_background_color, command=lambda:NetworkModelSelection("T", changeModelParametersList))
-    piModelButton.grid(row=3, column=0)
-    TModelButton.grid(row=3, column=1)
+    
+    #Computation of new ABCD matrix frame
+    ComputationFrame = LabelFrame(newConfigWindow, text="ABCD' matrix", font=("Helvetica", 10), background=frame_background_color)
+    ComputationFrame.grid(row=1, column=1)
+    #labels and entries of the ABCD' matrix
+    #labels
+    ABCDmtALabel_ = Label(ComputationFrame, text="A'", font=("Helvetica", 10), background=options_background_color, justify='left')
+    ABCDmtALabel_.grid(row=0, column=0)
+    ABCDmtBLabel_ = Label(ComputationFrame, text="B'", font=("Helvetica", 10), background=options_background_color, justify='left')
+    ABCDmtBLabel_.grid(row=0, column=2)
+    ABCDmtCLabel_ = Label(ComputationFrame, text="C'", font=("Helvetica", 10), background=options_background_color, justify='left')
+    ABCDmtCLabel_.grid(row=1, column=0)
+    ABCDmtDLabel_ = Label(ComputationFrame, text="D'", font=("Helvetica", 10), background=options_background_color, justify='left')
+    ABCDmtDLabel_.grid(row=1, column=2)
+    #parameter entries
+    ABCDmtAEntry_ = Entry(ComputationFrame, font=("Helvetica", 10), width=entry_width, justify="right")
+    ABCDmtAEntry_.grid(row=0, column=1, sticky="w")
+    ABCDmtAEntry_.config(state="readonly")
+    ABCDmtBEntry_ = Entry(ComputationFrame, font=("Helvetica", 10), width=entry_width, justify="right")
+    ABCDmtBEntry_.grid(row=0, column=3, sticky="e")
+    ABCDmtBEntry_.config(state="readonly")
+    ABCDmtCEntry_ = Entry(ComputationFrame, font=("Helvetica", 10), width=entry_width, justify="right")
+    ABCDmtCEntry_.grid(row=1, column=1, sticky="w")
+    ABCDmtCEntry_.config(state="readonly")
+    ABCDmtDEntry_ = Entry(ComputationFrame, font=("Helvetica", 10), width=entry_width, justify="right")
+    ABCDmtDEntry_.grid(row=1, column=3, sticky="e")
+    ABCDmtDEntry_.config(state="readonly")
     
     #evaluation of original ABCD parameters
     S11 = inputList[3]
@@ -244,28 +265,130 @@ def unknownNetworkDecomposition(root, inputList, outputList):
     ABCDmtDEntry.configure(state="normal")
     ABCDmtDEntry.delete(0, END) #deletes the current value
     ABCDmtDEntry.insert(0, paramD) #inserts new value assigned by 2nd parameter
-    ABCDmtDEntry.configure(state="readonly")    
-    '''
-    per riportare risultato finale nella matrice ABCD iniziale?
+    ABCDmtDEntry.configure(state="readonly")        
     
-    #ABCD parameters update
-    A.configure(state="normal")
-    A.delete(0, END) #deletes the current value
-    A.insert(0, paramA) #inserts new value assigned by 2nd parameter
-    A.configure(state="readonly")
-    B.configure(state="normal")
-    B.delete(0, END) #deletes the current value
-    B.insert(0, paramB) #inserts new value assigned by 2nd parameter
-    B.configure(state="readonly")
-    C.configure(state="normal")
-    C.delete(0, END) #deletes the current value
-    C.insert(0, paramC) #inserts new value assigned by 2nd parameter
-    C.configure(state="readonly")
-    D.configure(state="normal")
-    D.delete(0, END) #deletes the current value
-    D.insert(0, paramD) #inserts new value assigned by 2nd parameter
-    D.configure(state="readonly")    
-    '''
+    #Equivalent Pi-Model
+    #output frame
+    OutputFrame = LabelFrame(newConfigWindow, text="Equivalent Pi-Model", font=("Helvetica", 10), background=frame_background_color)
+    OutputFrame.grid(row=0,column=2)
+    OutputParameterFrame = LabelFrame(OutputFrame, text="Components", font=("Helvetica", 10), background=options_background_color)
+    OutputParameterFrame.grid(row=0, column=0, sticky="w")
+    C1Label = Label(OutputParameterFrame, text="C1", font=("Helvetica", 10), background=options_background_color, justify='left')
+    C1Label.grid(row=0, column=0, sticky='w')
+    C2Label = Label(OutputParameterFrame, text="C2", font=("Helvetica", 10), background=options_background_color, justify='left')
+    C2Label.grid(row=1, column=0, sticky='w')
+    C3Label = Label(OutputParameterFrame, text="C3", font=("Helvetica", 10), background=options_background_color, justify='left')
+    C3Label.grid(row=2, column=0, sticky='w')
+    Y1Label = Label(OutputParameterFrame, text="Y1", font=("Helvetica", 10), background=options_background_color, justify='left')
+    Y1Label.grid(row=3, column=0, sticky='w')
+    Y2Label = Label(OutputParameterFrame, text="Y2", font=("Helvetica", 10), background=options_background_color, justify='left')
+    Y2Label.grid(row=4, column=0, sticky='w')
+    YLabel = Label(OutputParameterFrame, text="Y", font=("Helvetica", 10), background=options_background_color, justify='left')
+    YLabel.grid(row=5, column=0, sticky='w')
+    C1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
+    C1Entry.grid(row=0, column=1, sticky="w")
+    C2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
+    C2Entry.grid(row=1, column=1, sticky="w")
+    C3Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
+    C3Entry.grid(row=2, column=1, sticky="w")
+    Y1Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
+    Y1Entry.grid(row=3, column=1, sticky="w")
+    Y2Entry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
+    Y2Entry.grid(row=4, column=1, sticky="w")
+    YEntry = Entry(OutputParameterFrame, font=("Helvetica", 10), width=entry_width_extended, justify="right", state="readonly")
+    YEntry.grid(row=5, column=1, sticky="w")
+    
+    #lists declaration
+    changeModelParametersList = [SelectedNetworkModelEntry, p1Label, p2Label, p3Label, p4Label, p1Entry, p2Entry, p3Entry, p4Entry]
+    inputEntriesList = [p1Entry, p2Entry, p3Entry, p4Entry, ABCDmtAEntry, ABCDmtBEntry, ABCDmtCEntry, ABCDmtDEntry]
+    outputEntriesList = [ABCDmtAEntry_, ABCDmtBEntry_, ABCDmtCEntry_, ABCDmtDEntry_, C1Entry, C2Entry, C3Entry, Y1Entry, Y2Entry, YEntry]
+    #Selection Buttons
+    piModelButton = Button(NetworkModelSelectionFrame, text="Pi-Model", font=("Helvetica", 10), background=button_background_color, command=lambda:NetworkModelSelection("P", changeModelParametersList))
+    TModelButton = Button(NetworkModelSelectionFrame, text="T-Model", font=("Helvetica", 10), background=button_background_color, command=lambda:NetworkModelSelection("T", changeModelParametersList))
+    piModelButton.grid(row=3, column=0)
+    TModelButton.grid(row=3, column=1)
+    #Compute Button
+    EvaluateModifiedABCDMatrix = Button(newConfigWindow, text="Calculate", font=("Helvetica", 10), background=button_background_color, command=lambda:EvaluateABCD_(inputList, inputEntriesList, outputEntriesList, SelectedNetworkModelEntry.get()))
+    EvaluateModifiedABCDMatrix.grid(row=1, column=0)
+    
+def EvaluateABCD_(inputParameters, inputEntriesList, outputEntriesList, selection):
+    if selection == "Pi-Model":
+        if len(inputEntriesList[1].get()) == 0:
+            return
+    elif selection == "T-Model":
+        if len(inputEntriesList[2].get()) == 0:
+            return
+            
+    m1 = [complex(inputEntriesList[0].get()), complex(inputEntriesList[1].get()), complex(inputEntriesList[2].get()), complex(inputEntriesList[3].get())]
+    m2 = [complex(inputEntriesList[4].get()), complex(inputEntriesList[5].get()), complex(inputEntriesList[6].get()), complex(inputEntriesList[7].get())]
+    if selection == "Pi-Model":
+        m1[1] = -1 * m1[1]
+    elif selection == "T-Model":
+        m1[2] = -1 * m1[2]
+    
+    res = matrixProduct(m1, m2)
+    
+    for i in range(0, 4):
+        outputEntriesList[i].configure(state="normal")
+        outputEntriesList[i].delete(0, END)
+        outputEntriesList[i].insert(0, res[i])
+        outputEntriesList[i].configure(state="readonly")
+        
+    evalPiModelUnknownNetwork(inputParameters, res, outputEntriesList)
+
+def evalPiModelUnknownNetwork(inputParams, ABCDParams_, outputEntriesList):
+    paramA = ABCDParams_[0]
+    paramB = ABCDParams_[1]
+    paramC = ABCDParams_[2]
+    paramD = ABCDParams_[3]
+    opFreq = inputParams[0]
+    chImped = inputParams[1]
+    SRF = inputParams[2]
+    C1 = outputEntriesList[4]
+    C2 = outputEntriesList[5]
+    C3 = outputEntriesList[6]
+    Y1 = outputEntriesList[7]
+    Y2 = outputEntriesList[8]
+    Y = outputEntriesList[9]
+    #parameters evaluation
+    Z = complex(chImped.get())*paramB;
+    Inductance = Z.imag/(2*pi*int(opFreq.get()))
+    Y.configure(state="normal")
+    Y.delete(0, END)
+    Y.insert(0, Inductance)
+    Y.configure(state="readonly")
+    valueY1 = (paramD-1)/Z;
+    valueY1Rounded = complex(round(valueY1.real, round_digits), round(valueY1.imag, round_digits))
+    Y1.configure(state="normal")
+    Y1.delete(0, END)
+    Y1.insert(0, valueY1Rounded)
+    Y1.configure(state="readonly")
+    valueY2 = (paramA-1)/Z;
+    valueY2Rounded = complex(round(valueY2.real, round_digits), round(valueY2.imag, round_digits))
+    Y2.configure(state="normal")
+    Y2.delete(0, END)
+    Y2.insert(0, valueY2Rounded)
+    Y2.configure(state="readonly")
+    commonDen = (2*pi*int(opFreq.get()))
+    valueC1 = valueY1.imag/commonDen
+    valueC1Rounded = complex(round(valueC1.real, round_digits), round(valueC1.imag, round_digits))
+    C1.configure(state="normal")
+    C1.delete(0, END)
+    C1.insert(0, valueC1)
+    C1.configure(state="readonly")
+    valueC2 = valueY2.imag/commonDen
+    valueC2Rounded = complex(round(valueC2.real, round_digits), round(valueC2.imag, round_digits))
+    C2.configure(state="normal")
+    C2.delete(0, END)
+    C2.insert(0, valueC2)
+    C2.configure(state="readonly")
+    valueC3 = 1/(Inductance*((2*pi)*int(SRF.get()))*((2*pi)*int(SRF.get())))
+    valueC3Rounded = complex(round(valueC3.real, round_digits), round(valueC3.imag, round_digits))
+    C3.configure(state="normal")
+    C3.delete(0, END)
+    C3.insert(0, valueC3)
+    C3.configure(state="readonly")
+
 def NetworkModelSelection(selection, parametersList):
     if selection == 'P':
         #Update selected network entry
@@ -291,8 +414,7 @@ def NetworkModelSelection(selection, parametersList):
         parametersList[8].configure(state="normal")
         parametersList[8].delete(0,END)
         parametersList[8].insert(0,"1")
-        parametersList[8].configure(state="readonly")
-        
+        parametersList[8].configure(state="readonly")      
         
     elif selection == 'T':
         #Update selected network entry
@@ -372,7 +494,7 @@ def main():
     #output frame
     OutputFrame = LabelFrame(root, text="Output", font=("Helvetica", 10), background=frame_background_color)
     OutputFrame.grid(row=0,column=1)
-    OutputParameterFrame = LabelFrame(OutputFrame, text="Components", font=("Helvetica", 10), background=options_background_color)
+    OutputParameterFrame = LabelFrame(OutputFrame, text="Parasitic Parameters and Equivalent Inductance", font=("Helvetica", 10), background=options_background_color)
     OutputParameterFrame.grid(row=0, column=0, sticky="w")
     C1Label = Label(OutputParameterFrame, text="C1", font=("Helvetica", 10), background=options_background_color, justify='left')
     C1Label.grid(row=0, column=0, sticky='w')
@@ -436,13 +558,13 @@ def main():
     
     #calculation button
     calculateBtn = Button(root, text="Extraction", font=("Helvetica", 10), background=button_background_color, command=lambda:parametersExtraction(inputParameters, outputParameters))
-    calculateBtn.grid(row=3, column=0)
+    calculateBtn.grid(row=3, column=0, sticky="w")
     #reset button
     resetBtn = Button(root, text="Reset", font=("Helvetica", 10), background=button_background_color, command=lambda:reset(inputParameters, outputParameters))
-    resetBtn.grid(row=3, column=1)
+    resetBtn.grid(row=4, column=0)
     #unknown network decomposition button
-    UnknownNetworkDecompBtn = Button(root, text="ABCD matrix premultiplication", command=lambda: unknownNetworkDecomposition(root, inputParameters, outputParameters))
-    UnknownNetworkDecompBtn.grid(row=2, column=0)
+    UnknownNetworkDecompBtn = Button(root, text="Unknown Network", font=("Helvetica", 10), background=button_background_color, command=lambda: unknownNetworkDecomposition(root, inputParameters, outputParameters))
+    UnknownNetworkDecompBtn.grid(row=3, column=1, sticky='w')
     root.bind('<Return>', lambda eff: parametersExtraction(inputParameters, outputParameters))
     
     root.mainloop()
