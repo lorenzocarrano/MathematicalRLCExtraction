@@ -271,7 +271,7 @@ def unknownNetworkDecomposition(root, inputList, outputList):
     #output frame
     OutputFrame = LabelFrame(newConfigWindow, text="Equivalent Pi-Model", font=("Helvetica", 10), background=frame_background_color)
     OutputFrame.grid(row=0,column=2)
-    OutputParameterFrame = LabelFrame(OutputFrame, text="Components", font=("Helvetica", 10), background=options_background_color)
+    OutputParameterFrame = LabelFrame(OutputFrame, text="Parasitic Parameters and Equivalent Inductance", font=("Helvetica", 10), background=options_background_color)
     OutputParameterFrame.grid(row=0, column=0, sticky="w")
     C1Label = Label(OutputParameterFrame, text="C1", font=("Helvetica", 10), background=options_background_color, justify='left')
     C1Label.grid(row=0, column=0, sticky='w')
