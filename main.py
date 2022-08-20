@@ -1,9 +1,9 @@
 from tkinter import *
 from math import pi
 from utils import matrixProduct
-frame_background_color = "light blue"
-options_background_color = "light blue"
-root_background_color = "light blue"
+frame_background_color = "#CCE5FF"
+options_background_color = "#CCE5FF"
+root_background_color = "#CCE5FF"
 button_background_color = "white"
 entry_width = 16
 entry_width_extended = 30
