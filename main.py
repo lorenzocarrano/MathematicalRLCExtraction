@@ -185,9 +185,11 @@ def unknownNetworkDecomposition(root, inputList, outputList):
     SelectedNetworkModelEntry.configure(state="normal")
     SelectedNetworkModelEntry.insert(0, "Pi-Model")
     SelectedNetworkModelEntry.configure(state="readonly")
+    #lists declaration
+    changeModelParametersList = [SelectedNetworkModelEntry, p1Label, p2Label, p3Label, p4Label, p1Entry, p2Entry, p3Entry, p4Entry]
     #Selection Buttons
-    piModelButton = Button(NetworkModelSelectionFrame, text="Pi-Model", font=("Helvetica", 10), background=button_background_color, command=lambda:NetworkModelSelection("P"))
-    TModelButton = Button(NetworkModelSelectionFrame, text="T-Model", font=("Helvetica", 10), background=button_background_color, command=lambda:NetworkModelSelection("T"))
+    piModelButton = Button(NetworkModelSelectionFrame, text="Pi-Model", font=("Helvetica", 10), background=button_background_color, command=lambda:NetworkModelSelection("P", changeModelParametersList))
+    TModelButton = Button(NetworkModelSelectionFrame, text="T-Model", font=("Helvetica", 10), background=button_background_color, command=lambda:NetworkModelSelection("T", changeModelParametersList))
     piModelButton.grid(row=3, column=0)
     TModelButton.grid(row=3, column=1)
     
@@ -244,6 +246,8 @@ def unknownNetworkDecomposition(root, inputList, outputList):
     ABCDmtDEntry.insert(0, paramD) #inserts new value assigned by 2nd parameter
     ABCDmtDEntry.configure(state="readonly")    
     '''
+    per riportare risultato finale nella matrice ABCD iniziale?
+    
     #ABCD parameters update
     A.configure(state="normal")
     A.delete(0, END) #deletes the current value
@@ -262,8 +266,62 @@ def unknownNetworkDecomposition(root, inputList, outputList):
     D.insert(0, paramD) #inserts new value assigned by 2nd parameter
     D.configure(state="readonly")    
     '''
-def NetworkModelSelection(selection):
-    pass
+def NetworkModelSelection(selection, parametersList):
+    if selection == 'P':
+        #Update selected network entry
+        parametersList[0].configure(state="normal")
+        parametersList[0].delete(0, END)
+        parametersList[0].insert(0, "Pi-Model")
+        parametersList[0].configure(state="readonly")
+        #Change matrix configuration
+        parametersList[1].configure(text="")
+        parametersList[2].configure(text="Z")
+        parametersList[3].configure(text="")
+        parametersList[4].configure(text="")
+        parametersList[5].configure(state="normal")
+        parametersList[5].delete(0,END)
+        parametersList[5].insert(0,"1")
+        parametersList[5].configure(state="readonly")
+        parametersList[6].configure(state="normal")
+        parametersList[6].delete(0, END)
+        parametersList[7].configure(state="normal")
+        parametersList[7].delete(0,END)
+        parametersList[7].insert(0,"0")
+        parametersList[7].configure(state="readonly")
+        parametersList[8].configure(state="normal")
+        parametersList[8].delete(0,END)
+        parametersList[8].insert(0,"1")
+        parametersList[8].configure(state="readonly")
+        
+        
+    elif selection == 'T':
+        #Update selected network entry
+        parametersList[0].configure(state="normal")
+        parametersList[0].delete(0, END)
+        parametersList[0].insert(0, "T-Model")
+        parametersList[0].configure(state="readonly")
+        #Change matrix configuration
+        parametersList[1].configure(text="")
+        parametersList[2].configure(text="")
+        parametersList[3].configure(text="Y")
+        parametersList[4].configure(text="")
+        parametersList[5].configure(state="normal")
+        parametersList[5].delete(0,END)
+        parametersList[5].insert(0,"1")
+        parametersList[5].configure(state="readonly")
+        parametersList[6].configure(state="normal")
+        parametersList[6].delete(0, END)
+        parametersList[6].insert(0, "0")
+        parametersList[6].configure(state="readonly")
+        parametersList[7].configure(state="normal")
+        parametersList[7].delete(0,END)
+        parametersList[8].configure(state="normal")
+        parametersList[8].delete(0,END)
+        parametersList[8].insert(0,"1")
+        parametersList[8].configure(state="readonly")
+    
+    else:
+        pass
 
 def main():
     #main window settings
