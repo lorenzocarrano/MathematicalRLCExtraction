@@ -6,6 +6,8 @@ root_background_color = "light blue"
 button_background_color = "white"
 entry_width = 16
 entry_width_extended = 30
+entry_width_reduced = 9
+entry_width_short = 3
 round_digits = 5
 
 def parametersExtraction(inputList, outputList):
@@ -114,6 +116,154 @@ def reset(inputList, outputList):
         outputList[i].configure(state="normal")
         outputList[i].delete(0, END)
         outputList[i].configure(state="readonly")
+
+#def unknownNetworkDecomposition(mt1, mt2):
+def unknownNetworkDecomposition(root, inputList, outputList):
+    #Original ABCD frame
+    newConfigWindow = Toplevel(root)
+    newConfigWindow.configure(background=root_background_color)
+    OriginalABCDFrame = LabelFrame(newConfigWindow, text="Original ABCD matrix", font=("Helvetica", 10), background=frame_background_color)
+    OriginalABCDFrame.grid(row=0, column=1, sticky='nw')
+    #labels
+    ABCDmtALabel = Label(OriginalABCDFrame, text="A", font=("Helvetica", 10), background=options_background_color, justify='left')
+    ABCDmtALabel.grid(row=0, column=0)
+    ABCDmtBLabel = Label(OriginalABCDFrame, text="B", font=("Helvetica", 10), background=options_background_color, justify='left')
+    ABCDmtBLabel.grid(row=0, column=2)
+    ABCDmtCLabel = Label(OriginalABCDFrame, text="C", font=("Helvetica", 10), background=options_background_color, justify='left')
+    ABCDmtCLabel.grid(row=1, column=0)
+    ABCDmtDLabel = Label(OriginalABCDFrame, text="D", font=("Helvetica", 10), background=options_background_color, justify='left')
+    ABCDmtDLabel.grid(row=1, column=2)
+    #parameter entries
+    ABCDmtAEntry = Entry(OriginalABCDFrame, font=("Helvetica", 10), width=entry_width, justify="right")
+    ABCDmtAEntry.grid(row=0, column=1, sticky="w")
+    ABCDmtBEntry = Entry(OriginalABCDFrame, font=("Helvetica", 10), width=entry_width, justify="right")
+    ABCDmtBEntry.grid(row=0, column=3, sticky="e")
+    ABCDmtCEntry = Entry(OriginalABCDFrame, font=("Helvetica", 10), width=entry_width, justify="right")
+    ABCDmtCEntry.grid(row=1, column=1, sticky="w")
+    ABCDmtDEntry = Entry(OriginalABCDFrame, font=("Helvetica", 10), width=entry_width, justify="right")
+    ABCDmtDEntry.grid(row=1, column=3, sticky="e")
+    #Network model selection
+    NetworkModelSelectionFrame = LabelFrame(newConfigWindow, text="Network Model Selection", font=("Helvetica", 10), background=frame_background_color)
+    NetworkModelSelectionFrame.grid(row=0, column=0, sticky='nw')
+    #Selected Model Matrix Frame
+    InnerFrame = LabelFrame(NetworkModelSelectionFrame, text="Premult Matrix", font=("Helvetica", 10), background=frame_background_color)
+    InnerFrame.grid(row=0, column=1, sticky='ne')
+    #labels
+    p1Label = Label(InnerFrame, text="", font=("Helvetica", 10), background=options_background_color, justify='left')
+    p1Label.grid(row=1, column=0)
+    p2Label = Label(InnerFrame, text="Z", font=("Helvetica", 10), background=options_background_color, justify='left')
+    p2Label.grid(row=1, column=2)
+    p3Label = Label(InnerFrame, text="", font=("Helvetica", 10), background=options_background_color, justify='left')
+    p3Label.grid(row=2, column=0)
+    p4Label = Label(InnerFrame, text="", font=("Helvetica", 10), background=options_background_color, justify='left')
+    p4Label.grid(row=2, column=2)
+    
+    #parameter entries
+    p1Entry = Entry(InnerFrame, font=("Helvetica", 10), width=entry_width_short, justify="right")
+    p1Entry.grid(row=1, column=1, sticky="w")
+    p1Entry.configure(state="normal")
+    p1Entry.insert(0, "1")
+    p1Entry.configure(state="readonly")
+    p2Entry = Entry(InnerFrame, font=("Helvetica", 10), width=entry_width_short, justify="right")
+    p2Entry.grid(row=1, column=3, sticky="e")
+    p2Entry.configure(state="normal")
+    p3Entry = Entry(InnerFrame, font=("Helvetica", 10), width=entry_width_short, justify="right")
+    p3Entry.grid(row=2, column=1, sticky="w")
+    p3Entry.configure(state="normal")
+    p3Entry.insert(0, "0")
+    p3Entry.configure(state="readonly")
+    p4Entry = Entry(InnerFrame, font=("Helvetica", 10), width=entry_width_short, justify="right")
+    p4Entry.grid(row=2, column=3, sticky="e")
+    p4Entry.configure(state="normal")
+    p4Entry.insert(0, "1")
+    p4Entry.configure(state="readonly")
+    #Selected Network Label and Entry
+    SelectedNetworkModelLabel = Label(NetworkModelSelectionFrame, text="Selected Model", font=("Helvetica", 10), background=frame_background_color)
+    SelectedNetworkModelLabel.grid(row=2, column=0, sticky='w')
+    SelectedNetworkModelEntry = Entry(NetworkModelSelectionFrame, font=("Helvetica", 10), width=entry_width_reduced, justify="left")
+    SelectedNetworkModelEntry.grid(row=2, column=1)
+    SelectedNetworkModelEntry.configure(state="normal")
+    SelectedNetworkModelEntry.insert(0, "Pi-Model")
+    SelectedNetworkModelEntry.configure(state="readonly")
+    #Selection Buttons
+    piModelButton = Button(NetworkModelSelectionFrame, text="Pi-Model", font=("Helvetica", 10), background=button_background_color, command=lambda:NetworkModelSelection("P"))
+    TModelButton = Button(NetworkModelSelectionFrame, text="T-Model", font=("Helvetica", 10), background=button_background_color, command=lambda:NetworkModelSelection("T"))
+    piModelButton.grid(row=3, column=0)
+    TModelButton.grid(row=3, column=1)
+    
+    #evaluation of original ABCD parameters
+    S11 = inputList[3]
+    S12 = inputList[4]
+    S21 = inputList[5]
+    S22 = inputList[6]
+    
+    A = outputList[0]
+    B = outputList[1]
+    C = outputList[2]
+    D = outputList[3]
+    C1 = outputList[4]
+    C2 = outputList[5]
+    C3 = outputList[6]
+    Y1 = outputList[7]
+    Y2 = outputList[8]
+    Y = outputList[9]
+    
+    paramA = ((1+complex(S11.get()))*(1-complex(S22.get()))+complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()))
+    paramB = ((1+complex(S11.get()))*(1+complex(S22.get()))-complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()))
+    paramC = ((1-complex(S11.get()))*(1-complex(S22.get()))-complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()))
+    paramD = ((1-complex(S11.get()))*(1+complex(S22.get()))+complex(S12.get())*complex(S21.get()))/(2*complex(S21.get()))
+    #rounding results
+    paramArealRounded = round(paramA.real, round_digits)
+    paramAimagRounded = round(paramA.imag, round_digits)
+    paramA = complex(paramArealRounded, paramAimagRounded)
+    paramBrealRounded = round(paramB.real, round_digits)
+    paramBimagRounded = round(paramB.imag, round_digits)
+    paramB = complex(paramBrealRounded, paramBimagRounded)
+    paramCrealRounded = round(paramC.real, round_digits)
+    paramCimagRounded = round(paramC.imag, round_digits)
+    paramC = complex(paramCrealRounded, paramCimagRounded)
+    paramDrealRounded = round(paramD.real, round_digits)
+    paramDimagRounded = round(paramD.imag, round_digits)
+    paramD = complex(paramDrealRounded, paramDimagRounded)
+    
+    #ABCD parameters update
+    ABCDmtAEntry.configure(state="normal")
+    ABCDmtAEntry.delete(0, END) #deletes the current value
+    ABCDmtAEntry.insert(0, paramA) #inserts new value assigned by 2nd parameter
+    ABCDmtAEntry.configure(state="readonly")
+    ABCDmtBEntry.configure(state="normal")
+    ABCDmtBEntry.delete(0, END) #deletes the current value
+    ABCDmtBEntry.insert(0, paramB) #inserts new value assigned by 2nd parameter
+    ABCDmtBEntry.configure(state="readonly")
+    ABCDmtCEntry.configure(state="normal")
+    ABCDmtCEntry.delete(0, END) #deletes the current value
+    ABCDmtCEntry.insert(0, paramC) #inserts new value assigned by 2nd parameter
+    ABCDmtCEntry.configure(state="readonly")
+    ABCDmtDEntry.configure(state="normal")
+    ABCDmtDEntry.delete(0, END) #deletes the current value
+    ABCDmtDEntry.insert(0, paramD) #inserts new value assigned by 2nd parameter
+    ABCDmtDEntry.configure(state="readonly")    
+    '''
+    #ABCD parameters update
+    A.configure(state="normal")
+    A.delete(0, END) #deletes the current value
+    A.insert(0, paramA) #inserts new value assigned by 2nd parameter
+    A.configure(state="readonly")
+    B.configure(state="normal")
+    B.delete(0, END) #deletes the current value
+    B.insert(0, paramB) #inserts new value assigned by 2nd parameter
+    B.configure(state="readonly")
+    C.configure(state="normal")
+    C.delete(0, END) #deletes the current value
+    C.insert(0, paramC) #inserts new value assigned by 2nd parameter
+    C.configure(state="readonly")
+    D.configure(state="normal")
+    D.delete(0, END) #deletes the current value
+    D.insert(0, paramD) #inserts new value assigned by 2nd parameter
+    D.configure(state="readonly")    
+    '''
+def NetworkModelSelection(selection):
+    pass
 
 def main():
     #main window settings
@@ -228,11 +378,13 @@ def main():
     
     #calculation button
     calculateBtn = Button(root, text="Extraction", font=("Helvetica", 10), background=button_background_color, command=lambda:parametersExtraction(inputParameters, outputParameters))
-    calculateBtn.grid(row=2, column=0)
+    calculateBtn.grid(row=3, column=0)
     #reset button
     resetBtn = Button(root, text="Reset", font=("Helvetica", 10), background=button_background_color, command=lambda:reset(inputParameters, outputParameters))
-    resetBtn.grid(row=2, column=1)
-    
+    resetBtn.grid(row=3, column=1)
+    #unknown network decomposition button
+    UnknownNetworkDecompBtn = Button(root, text="ABCD matrix premultiplication", command=lambda: unknownNetworkDecomposition(root, inputParameters, outputParameters))
+    UnknownNetworkDecompBtn.grid(row=2, column=0)
     root.bind('<Return>', lambda eff: parametersExtraction(inputParameters, outputParameters))
     
     root.mainloop()
